@@ -16,6 +16,9 @@ public class PacMacScript : MonoBehaviour
     public GameObject Exit1;
     public GameObject Exit2;
 
+    public float timerTime = 10;
+    public bool isOrb = false;
+
     private bool goForward = false;
     private bool goBackward = false;
     private bool goRight = false;
@@ -41,6 +44,7 @@ public class PacMacScript : MonoBehaviour
         {
             scoreCount++;
             this.theScoreTextMesh.text = "SCORE: " + scoreCount;
+            isOrb = true;
         }
         else if(collision.gameObject.tag.Equals("Exit1"))
         {
@@ -49,6 +53,18 @@ public class PacMacScript : MonoBehaviour
         else if(collision.gameObject.tag.Equals("Exit2"))
         {
             this.transform.position = Exit1.transform.position;
+        }
+        else if(collision.gameObject.tag.Equals("Enemy"))
+        {
+            if(isOrb)
+            {
+                pinkGhostAgent.isStopped = true;
+                Destroy(pinkGhost);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
     // Update is called once per frame
@@ -112,6 +128,19 @@ public class PacMacScript : MonoBehaviour
             goRight = true;
             goLeft = false;
             
+        }
+
+        if(isOrb)
+        {
+            if(timerTime > 0)
+            {
+                timerTime -= Time.deltaTime;
+            }
+            else
+            {
+                isOrb = false;
+                timerTime = 10;
+            }
         }
     }
 }
